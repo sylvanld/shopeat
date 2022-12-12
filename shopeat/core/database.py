@@ -5,7 +5,8 @@ from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
-from shopeat.settings import SHOPEAT_DATABASE_URL, Config
+from shopeat.core.config import Config
+from shopeat.settings import SHOPEAT_DATABASE_URL
 
 LOGGER = logging.getLogger(__name__)
 

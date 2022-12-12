@@ -4,10 +4,11 @@ import jwt.exceptions
 import websockets
 
 from shopeat.core.auth.tokens import account_uid_from_token
+from shopeat.core.config import Config
 from shopeat.notifier.dispatcher import WSNotificationDispatcher
 from shopeat.notifier.plugins.amqp import AMQPNotificationsBroker
 from shopeat.notifier.plugins.interface import NotificationsBroker
-from shopeat.settings import SHOPEAT_NOTIFIER_HOST, SHOPEAT_NOTIFIER_PORT, Config
+from shopeat.settings import SHOPEAT_NOTIFIER_HOST, SHOPEAT_NOTIFIER_PORT
 
 LOGGER = logging.getLogger(__name__)
 

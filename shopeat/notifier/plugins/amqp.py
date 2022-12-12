@@ -1,8 +1,9 @@
 import aio_pika
 
+from shopeat.core.config import Config
 from shopeat.notifier.models import Notification
 from shopeat.notifier.plugins.interface import NotificationsBroker
-from shopeat.settings import SHOPEAT_AMQP_BROKER_URL, Config
+from shopeat.settings import SHOPEAT_AMQP_BROKER_URL
 
 
 class AMQPNotificationsBroker(NotificationsBroker):

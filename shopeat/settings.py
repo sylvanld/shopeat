@@ -1,5 +1,3 @@
-from shopeat.core.config import Config
-
 SHOPEAT_AMQP_BROKER_URL = "shopeat.amqp_broker.url"
 SHOPEAT_NOTIFIER_HOST = "shopeat.notifier.host"
 SHOPEAT_NOTIFIER_PORT = "shopeat.notifier.port"

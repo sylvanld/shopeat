@@ -2,7 +2,8 @@ from datetime import datetime, timedelta
 
 import jwt
 
-from shopeat.settings import SHOPEAT_JWT_SECRET, Config
+from shopeat.core.config import Config
+from shopeat.settings import SHOPEAT_JWT_SECRET
 
 JWT_SECRET = Config.get(SHOPEAT_JWT_SECRET)
 
