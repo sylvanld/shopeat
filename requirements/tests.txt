@@ -1,3 +1,5 @@
 -r prod.txt
 
-pytest
+pylint>=2.15.8
+pylint-exit==1.2.0
+pytest>=7.2.0
