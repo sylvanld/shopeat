@@ -1,5 +1,4 @@
-
-from abc import ABC, abstractmethod, abstractclassmethod
+from abc import ABC, abstractclassmethod, abstractmethod
 from typing import Generator
 
 from shopeat.notifier.models import Notification

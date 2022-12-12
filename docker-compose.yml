@@ -8,6 +8,8 @@ services:
       SHOPEAT_API_HOST: "0.0.0.0"
       SHOPEAT_API_PORT: 8000
       SHOPEAT_AMQP_BROKER_URL: amqp://rabbit:password@rabbitmq
+      SHOPEAT_JWT_SECRET: tartampion
+      SHOPEAT_DATABASE_URL: "postgresql+asyncpg://postgres:password@database/shopeat"
     ports:
       - 8000:8000
     
@@ -17,9 +19,20 @@ services:
     environment:
       SHOPEAT_NOTIFIER_HOST: 0.0.0.0
       SHOPEAT_NOTIFIER_PORT: 7000
-      # SHOPEAT_AMQP_BROKER_URL: amqp://rabbit:password@rabbitmq
+      SHOPEAT_JWT_SECRET: tartampion
+      SHOPEAT_AMQP_BROKER_URL: amqp://rabbit:password@rabbitmq
     ports:
       - 7000:7000
+    restart: always
+
+  database:
+    image: postgres:alpine3.17
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    restart: always
   
   rabbitmq:
     image: rabbitmq:3-management
@@ -29,3 +42,4 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: rabbit
       RABBITMQ_DEFAULT_PASS: password
+    restart: always

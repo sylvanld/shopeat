@@ -1,7 +1,7 @@
 import json
 from typing import Any, Callable, Dict, Type
 
-from shopeat.config.sources.base import ConfigSource
+from shopeat.core.config.sources.base import ConfigSource
 
 UNDEFINED = ...
 
@@ -21,7 +21,7 @@ class Config:
     @classmethod
     def __get_instance(cls):
         if cls.__instance is None:
-            from shopeat.config.sources.environment import EnvironmentConfig
+            from shopeat.core.config.sources.environment import EnvironmentConfig
 
             cls.__instance = EnvironmentConfig()
         return cls.__instance

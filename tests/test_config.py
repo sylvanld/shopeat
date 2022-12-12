@@ -1,5 +1,5 @@
 import pytest
-from shopeat.config import Config
+from shopeat.settings import Config
 
 
 def test_get_non_existing_with_default_value():
