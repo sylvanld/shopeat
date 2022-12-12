@@ -10,7 +10,7 @@ lint:
 lint-strict:
 	isort --check --profile black $(SOURCE_PATH) $(TESTS_PATH)
 	black --check $(SOURCE_PATH) $(TESTS_PATH)
-	python -m pylint $(SOURCE_PATH) || pylint-exit --error-fail --warn-fail --refactor-fail $? 
+	python -m pylint $(SOURCE_PATH) || pylint-exit --error-fail --warn-fail --refactor-fail $$? 
 
 format:
 	isort $(SOURCE_PATH) $(TESTS_PATH)
