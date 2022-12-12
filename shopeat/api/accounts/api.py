@@ -21,7 +21,7 @@ async def get_token(credentials: CredentialsDTO):
     return {"access_token": generate_token(account.uid)}
 
 
-@router.post("/accounts/create", response_model=AccountReadDTO)
+@router.post("/accounts", response_model=AccountReadDTO)
 async def create_account(account_dto: AccountCreateDTO):
     return await account_service.create_account(account_dto)
 
