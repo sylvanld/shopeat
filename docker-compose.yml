@@ -1,0 +1,31 @@
+version: "3.6"
+
+services:
+  shopeat-api:
+    image: shopeat
+    command: api-start
+    environment:
+      SHOPEAT_API_HOST: "0.0.0.0"
+      SHOPEAT_API_PORT: 8000
+      SHOPEAT_AMQP_BROKER_URL: amqp://rabbit:password@rabbitmq
+    ports:
+      - 8000:8000
+    
+  shopeat-notifier:
+    image: shopeat
+    command: notifier-start
+    environment:
+      SHOPEAT_NOTIFIER_HOST: 0.0.0.0
+      SHOPEAT_NOTIFIER_PORT: 7000
+      # SHOPEAT_AMQP_BROKER_URL: amqp://rabbit:password@rabbitmq
+    ports:
+      - 7000:7000
+  
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit
+      RABBITMQ_DEFAULT_PASS: password

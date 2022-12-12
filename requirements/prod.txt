@@ -1,0 +1,6 @@
+aio_pika
+fastapi
+pydantic
+pyjwt
+uvicorn
+websockets

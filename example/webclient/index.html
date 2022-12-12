@@ -1,0 +1,22 @@
+<form id="form">
+    <input type="text" placeholder="token" name="token">
+    <button type="submit">connect</button>
+</form>
+
+<script>
+    const form = document.getElementById("form");
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const data = new FormData(form);
+        const encodedToken = encodeURIComponent(data.get("token"));
+
+        const socket = new WebSocket(`ws://token:${encodedToken}@localhost:7000`);
+        socket.onopen = () => {
+            setInterval(() => {
+                socket.send(JSON.stringify({ "message": "yopla!" }))
+            }, 2000);
+        }
+    })
+
+</script>
