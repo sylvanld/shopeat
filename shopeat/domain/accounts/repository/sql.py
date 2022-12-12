@@ -48,5 +48,5 @@ class SQLAccountRepository(AccountRepository):
     async def create(self, account_dto: AccountCreateDTO) -> AccountReadDTO:
         async with self.database.session.begin() as session:
             account = Account(uid=uuid4().hex, **account_dto.dict())
-            session.add(account)        
+            session.add(account)
             return AccountReadDTO.from_orm(account)
