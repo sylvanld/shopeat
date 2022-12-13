@@ -58,4 +58,7 @@ jobs:
         run: pip install -r requirements/docs.txt
       
       - name: "Build doc and update github pages"
-        run: mike deploy --push --update-aliases ${{ env.DOCKER_IMAGE_TAG }} latest
+        run: |-
+          git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+          git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
+          mike deploy --push --update-aliases ${{ env.DOCKER_IMAGE_TAG }} latest
