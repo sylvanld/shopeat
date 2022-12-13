@@ -42,3 +42,20 @@ jobs:
       - name: Build and publish
         if: success()
         run: docker buildx build --platform linux/amd64,linux/arm64 --output type=image,push=true -t ${{env.DOCKER_REGISTRY_URL}}/${{env.DOCKER_ORG_NAME}}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }} -t ${{ env.DOCKER_REGISTRY_URL }}/${{ env.DOCKER_ORG_NAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest .
+
+  publish-documentation:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: "Setup Python"
+        uses: actions/setup-python@v4.3.1
+        with:
+          python-version: 3.11
+
+      - name: "Install docs dependencies"
+        run: pip install -r requirements/docs.txt
+      
+      - name: "Build doc and update github pages"
+        run: mike deploy --push --update-aliases ${{ env.DOCKER_IMAGE_TAG }} latest

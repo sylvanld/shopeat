@@ -1,0 +1,9 @@
+site_name: ShopEat
+theme:
+  name: material
+plugins:
+  - mike:
+extra:
+  version:
+    default: 0.0.1
+    provider: mike

@@ -1,3 +1,14 @@
+## Shopeat docker image
+
+```
+docker pull sylvanld/shopeat:{imageTag}
+```
+
+Have a look at dockerhub to find [available image tags](https://hub.docker.com/r/sylvanld/shopeat/tags).
+
+### Example usage with docker-compose
+
+```yaml
 version: "3.6"
 
 services:
@@ -43,3 +54,4 @@ services:
       RABBITMQ_DEFAULT_USER: rabbit
       RABBITMQ_DEFAULT_PASS: password
     restart: always
+```
