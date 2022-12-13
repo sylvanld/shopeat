@@ -45,6 +45,17 @@ jobs:
         run: docker buildx build --platform linux/amd64,linux/arm64 --output type=image,push=true -t ${{env.DOCKER_REGISTRY_URL}}/${{env.DOCKER_ORG_NAME}}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }} -t ${{ env.DOCKER_REGISTRY_URL }}/${{ env.DOCKER_ORG_NAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest .
 
 
+      # update description of image in dockerhub
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3.1.2
+        with:
+          username: "${{ env.DOCKER_REGISTRY_USERNAME }}"
+          password: "${{ env.DOCKER_REGISTRY_PASSWORD }}"
+          repository: "${{ env.DOCKER_REGISTRY_URL }}/${{ env.DOCKER_ORG_NAME }}/${{ env.DOCKER_IMAGE_NAME }}"
+          # short-description: ...
+          readme-filepath: "docs/deploy/docker.md"
+
+
   publish_documentation:
     name: Publish documentation
     runs-on: ubuntu-latest
@@ -62,10 +73,11 @@ jobs:
       - name: "Build OpenAPI specs"
         run: |-
           mkdir -p docs/specs
-          docker run ${{env.DOCKER_REGISTRY_URL}}/${{env.DOCKER_ORG_NAME}}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }} \
+          docker run                                                  \
             -e SHOPEAT_JWT_SECRET=example-secret                      \
             -e SHOPEAT_DATABASE_URL=postgresql+asyncpg://localhost    \
             -e SHOPEAT_AMQP_BROKER_URL=toto sylvanld/shopeat          \
+            ${{env.DOCKER_REGISTRY_URL}}/${{env.DOCKER_ORG_NAME}}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }} \
             api-specs > docs/specs/shopeat-api.json
 
       - name: "Install docs dependencies"
