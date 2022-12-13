@@ -65,6 +65,9 @@ jobs:
     
     steps:
       - uses: actions/checkout@v2
+        with:
+          # fetch all commits/branches
+          fetch-depth: 0
 
       - name: "Setup Python"
         uses: actions/setup-python@v4.3.1
