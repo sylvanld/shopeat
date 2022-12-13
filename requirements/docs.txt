@@ -1,0 +1,5 @@
+mkdocs>=1.4.2
+mkdocs-material>=8.5.11
+mkdocs-material-extensions>=1.1.1
+mkdocs-swagger-ui-tag>=0.5.1
+mike>=1.1.2

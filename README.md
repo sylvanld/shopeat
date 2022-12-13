@@ -1,5 +1,7 @@
 # FoodBro's concept
 
+For more information regarding architecture or configuration of ShopEat, [have a look at documentation](https://sylvanld.github.io/shopeat/latest/).
+
 ## :bento: RECETTES
 
 ### :memo: CREER DES RECETTES
