@@ -74,11 +74,11 @@ jobs:
       - name: "Build OpenAPI specs"
         run: |-
           mkdir -p docs/specs
-          docker run                                                  \
-            -e SHOPEAT_JWT_SECRET=example-secret                      \
-            -e SHOPEAT_DATABASE_URL=postgresql+asyncpg://localhost    \
-            -e SHOPEAT_AMQP_BROKER_URL=toto sylvanld/shopeat          \
-            ${{env.DOCKER_REGISTRY_URL}}/${{env.DOCKER_ORG_NAME}}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }} \
+          docker run                                                                                                        \
+            -e SHOPEAT_JWT_SECRET=example-secret                                                                            \
+            -e SHOPEAT_DATABASE_URL=postgresql+asyncpg://localhost                                                          \
+            -e SHOPEAT_AMQP_BROKER_URL=toto                                                                                 \
+            ${{env.DOCKER_REGISTRY_URL}}/${{env.DOCKER_ORG_NAME}}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}  \
             api-specs > docs/specs/shopeat-api.json
 
       - name: "Install docs dependencies"
