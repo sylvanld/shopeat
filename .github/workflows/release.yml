@@ -48,10 +48,11 @@ jobs:
       # update description of image in dockerhub
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v3.1.2
+        if: ${{ env.DOCKER_REGISTRY_URL == 'docker.io' }}
         with:
           username: "${{ env.DOCKER_REGISTRY_USERNAME }}"
           password: "${{ env.DOCKER_REGISTRY_PASSWORD }}"
-          repository: "${{ env.DOCKER_REGISTRY_URL }}/${{ env.DOCKER_ORG_NAME }}/${{ env.DOCKER_IMAGE_NAME }}"
+          repository: "${{ env.DOCKER_ORG_NAME }}/${{ env.DOCKER_IMAGE_NAME }}"
           # short-description: ...
           readme-filepath: "docs/deploy/docker.md"
 
