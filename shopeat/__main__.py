@@ -6,6 +6,19 @@ def CLI():
     ...
 
 
+@CLI.command("api-specs")
+@click.option(
+    "--pretty", is_flag=True, help="Properly indent JSON to make it human readable"
+)
+def print_openapi_schema(pretty: bool):
+    import json
+
+    import shopeat.api.asgi
+
+    indent = 4 if pretty else None
+    print(json.dumps(shopeat.api.asgi.app.openapi(), indent=indent))
+
+
 @CLI.command("api-start")
 def start_api():
     import uvicorn

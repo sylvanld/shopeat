@@ -1,0 +1,94 @@
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+
+env:
+  DOCKER_IMAGE_NAME: shopeat
+  DOCKER_IMAGE_TAG: ${GITHUB_REF/refs\/tags\//}
+  DOCKER_ORG_NAME: sylvanld
+  
+  DOCKER_REGISTRY_URL: docker.io
+  DOCKER_REGISTRY_USERNAME: "${{ secrets.DOCKERHUB_USERNAME }}"
+  DOCKER_REGISTRY_PASSWORD: "${{ secrets.DOCKERHUB_PASSWORD }}"
+
+
+jobs:
+  publish_image:
+    name: Publish image
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      - name: Login to docker registry      
+        run: echo -n "${{ env.DOCKER_REGISTRY_PASSWORD }}" | docker login --username "${{ env.DOCKER_REGISTRY_USERNAME }}" --password-stdin ${{ env.DOCKER_REGISTRY_URL }}
+      
+      # Install QEMU to emulate different architecture (required to use buildx for ARM)
+      - name: Set up QEMU
+        if: success()
+        uses: docker/setup-qemu-action@v1
+
+      # Install docker buildx to build image for multiple architectures
+      - name: Docker Setup Buildx
+        if: success()
+        uses: docker/setup-buildx-action@v1.3.0
+        with:
+          # Buildx version. (eg. v0.3.0)
+          version: v0.3.0
+          
+      # build and publish image for multiple architectures
+      - name: Build and publish
+        if: success()
+        run: docker buildx build --platform linux/amd64,linux/arm64 --output type=image,push=true -t ${{env.DOCKER_REGISTRY_URL}}/${{env.DOCKER_ORG_NAME}}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }} -t ${{ env.DOCKER_REGISTRY_URL }}/${{ env.DOCKER_ORG_NAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest .
+
+
+      # update description of image in dockerhub
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3.1.2
+        if: ${{ env.DOCKER_REGISTRY_URL == 'docker.io' }}
+        with:
+          username: "${{ env.DOCKER_REGISTRY_USERNAME }}"
+          password: "${{ env.DOCKER_REGISTRY_PASSWORD }}"
+          repository: "${{ env.DOCKER_ORG_NAME }}/${{ env.DOCKER_IMAGE_NAME }}"
+          # short-description: ...
+          readme-filepath: "docs/deploy/docker.md"
+
+
+  publish_documentation:
+    name: Publish documentation
+    runs-on: ubuntu-latest
+    needs:
+      - publish_image
+    
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # fetch all commits/branches
+          fetch-depth: 0
+
+      - name: "Setup Python"
+        uses: actions/setup-python@v4.3.1
+        with:
+          python-version: 3.11
+
+      - name: "Build OpenAPI specs"
+        run: |-
+          mkdir -p docs/specs
+          docker run                                                                                                        \
+            -e SHOPEAT_JWT_SECRET=example-secret                                                                            \
+            -e SHOPEAT_DATABASE_URL=postgresql+asyncpg://localhost                                                          \
+            -e SHOPEAT_AMQP_BROKER_URL=toto                                                                                 \
+            ${{env.DOCKER_REGISTRY_URL}}/${{env.DOCKER_ORG_NAME}}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}  \
+            api-specs > docs/specs/shopeat-api.json
+
+      - name: "Install docs dependencies"
+        run: pip install -r requirements/docs.txt
+      
+      - name: "Build doc and update github pages"
+        run: |-
+          git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+          git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
+          mike deploy --push --update-aliases ${{ env.DOCKER_IMAGE_TAG }} latest
