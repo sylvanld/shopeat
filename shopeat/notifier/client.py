@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 
 import aio_pika
 
-from shopeat.config import SHOPEAT_AMQP_BROKER_URL
-from shopeat.config.config import Config
+from shopeat.core.config import Config
 from shopeat.notifier.models import Notification
+from shopeat.settings import SHOPEAT_AMQP_BROKER_URL
 
 
 class NotificationClient(ABC):

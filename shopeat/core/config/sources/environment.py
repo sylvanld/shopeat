@@ -1,6 +1,6 @@
 import os
 
-from shopeat.config.sources.base import ConfigSource
+from shopeat.core.config.sources.base import ConfigSource
 
 UNDEFINED = ...
 

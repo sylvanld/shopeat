@@ -1,6 +1,6 @@
 from fastapi import Depends, Header, HTTPException
 
-from shopeat.auth.tokens import account_uid_from_token
+from shopeat.core.auth.tokens import account_uid_from_token
 
 
 async def token_from_header(x_api_key: str = Header(None)):

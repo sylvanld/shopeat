@@ -1,11 +1,10 @@
 on:
-  push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - "*"
+  pull_request:
+    types:
+      - synchronize
 
 jobs:
-  unit-tests:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -14,6 +13,19 @@ jobs:
         with:
           python-version: 3.11
       - name: "Install test dependencies"
-        run: pip install -r requirements/tests.txt
+        run: pip install -r requirements/dev.txt
       - name: "Run unit tests"
-        run: python -m pytest tests/
+        run: make test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Setup Python"
+        uses: actions/setup-python@v4.3.1
+        with:
+          python-version: 3.11
+      - name: "Install test dependencies"
+        run: pip install -r requirements/dev.txt
+      - name: "Run unit tests"
+        run: make lint-strict

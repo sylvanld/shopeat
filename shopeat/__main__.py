@@ -11,7 +11,8 @@ def start_api():
     import uvicorn
 
     import shopeat.api.asgi
-    from shopeat.config import SHOPEAT_API_HOST, SHOPEAT_API_PORT, Config
+    from shopeat.core.config import Config
+    from shopeat.settings import SHOPEAT_API_HOST, SHOPEAT_API_PORT
 
     uvicorn.run(
         shopeat.api.asgi.app,
