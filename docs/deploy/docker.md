@@ -1,4 +1,10 @@
-## Shopeat docker image
+# Deploy with Docker
+
+## ShopEat official image
+
+ShopEat is distributed as a single docker image with multiple entrypoints. So in order to run multiple components:
+
+* Start by downloading ShopEat docker image
 
 ```
 docker pull sylvanld/shopeat:{imageTag}
@@ -6,7 +12,15 @@ docker pull sylvanld/shopeat:{imageTag}
 
 Have a look at dockerhub to find [available image tags](https://hub.docker.com/r/sylvanld/shopeat/tags).
 
-### Example usage with docker-compose
+
+* Then deploy choosen component by specifying a command to the entrypoint
+
+```
+docker run sylvanld/shopeat api-start
+```
+
+
+## Usage with docker-compose
 
 ```yaml
 version: "3.6"
