@@ -1,9 +1,4 @@
-from pydantic import BaseModel
-
-
-class BaseDTO(BaseModel):
-    class Config:
-        orm_mode = True
+from shopeat.core.dtos import BaseDTO
 
 
 class AccountBaseDTO(BaseDTO):
