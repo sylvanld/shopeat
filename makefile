@@ -13,5 +13,5 @@ lint-strict:
 	python -m pylint $(SOURCE_PATH) || pylint-exit --error-fail --warn-fail --refactor-fail $$? 
 
 format:
-	isort $(SOURCE_PATH) $(TESTS_PATH)
+	isort --profile black $(SOURCE_PATH) $(TESTS_PATH)
 	black $(SOURCE_PATH) $(TESTS_PATH)
