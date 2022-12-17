@@ -36,7 +36,7 @@ test: ## Run unit tests
 	 python -m pytest -v $(TESTS_PATH)
 
 lint: ## Check for errors in code and abort if one is found
-	python -m pylint $(SOURCE_PATH) || pylint-exit $?
+	python -m pylint $(SOURCE_PATH) || pylint-exit $$?
 
 lint-strict: ## Check for bad practices in code and abort if one is found
 	isort --check --profile black $(SOURCE_PATH) $(TESTS_PATH)
