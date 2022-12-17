@@ -11,7 +11,7 @@ from shopeat.domain.accounts.dtos import (
 from shopeat.domain.accounts.repository.sql import SQLAccountRepository
 from shopeat.domain.accounts.service import AccountService
 
-router = APIRouter()
+router = APIRouter(tags=["Accounts"])
 account_service = AccountService(SQLAccountRepository(DATABASE))
 
 
