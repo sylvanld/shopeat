@@ -1,3 +1,3 @@
 # ShopEat API reference
 
-<swagger-ui src="/specs/shopeat-api.json"/>
+<swagger-ui src="../../specs/shopeat-api.json"/>
