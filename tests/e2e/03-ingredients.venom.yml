@@ -1,0 +1,132 @@
+name: Test ingredients API
+testcases:
+  - name: get_token
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/auth/token"
+        timeout: 5
+        body: |-
+          {
+            "username": "{{.account.username}}",
+            "password": "{{.account.password}}"
+          }
+        vars:
+          access_token:
+            from: result.bodyjson.access_token
+        assertions:
+          - result.statuscode ShouldEqual 200
+
+  - name: Ensure can't create ingredient without valid shelve
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/ingredients"
+        timeout: 5
+        body: |-
+          {
+            "name": "Tomato",
+            "shelve_uid": "toto"
+          }
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        assertions:
+          - result.statuscode ShouldEqual 400
+
+  - name: create_shelve
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/shelves"
+        timeout: 5
+        body: |-
+          {
+            "name": "Vegetables"
+          }
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        vars:
+          shelve_uid:
+            from: result.bodyjson.uid
+        assertions:
+          - result.statuscode ShouldEqual 200
+
+  - name: create_ingredients
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/ingredients"
+        timeout: 5
+        body: |-
+          {
+            "name": "tomato",
+            "shelve_uid": "{{.create_shelve.shelve_uid}}"
+          }
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        vars:
+          ingredient1_uid:
+            from: result.bodyjson.uid
+        assertions:
+          - result.statuscode ShouldEqual 200
+
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/ingredients"
+        timeout: 5
+        body: |-
+          {
+            "name": "apple",
+            "shelve_uid": "{{.create_shelve.shelve_uid}}"
+          }
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        vars:
+          ingredient2_uid:
+            from: result.bodyjson.uid
+        assertions:
+          - result.statuscode ShouldEqual 200
+
+  - name: Get multiple ingredients by UID
+    steps:
+      - type: http
+        method: GET
+        url: "{{.API_URL}}/ingredients?uids={{.create_ingredients.ingredient1_uid}},{{.create_ingredients.ingredient2_uid}}"
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson ShouldHaveLength 2
+
+  - name: Search ingredient that does not exists
+    steps:
+      - type: http
+        method: GET
+        url: "{{.API_URL}}/ingredients/search?query=potatoes"
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson ShouldHaveLength 0
+
+  - name: Search existing ingredient
+    steps:
+      - type: http
+        method: GET
+        url: "{{.API_URL}}/ingredients/search?query=tomato"
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson ShouldHaveLength 1
+
+  - name: Search existing ingredient with partial name
+    steps:
+      - type: http
+        method: GET
+        url: "{{.API_URL}}/ingredients/search?query=toma"
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson ShouldHaveLength 1
