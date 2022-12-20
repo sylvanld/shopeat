@@ -3,10 +3,21 @@ from fastapi import FastAPI
 import shopeat.api.accounts.api
 import shopeat.api.groups.api
 import shopeat.api.publish.api
-from shopeat.api.metadata import OPENAPI_TAGS
+from shopeat.api.metadata import (
+    OPENAPI_DESCRIPTION,
+    OPENAPI_TAGS,
+    OPENAPI_TITLE,
+    OPENAPI_VERSION,
+)
 from shopeat.core.database import DATABASE
 
-app = FastAPI(docs_url="/", openapi_tags=OPENAPI_TAGS)
+app = FastAPI(
+    title=OPENAPI_TITLE,
+    description=OPENAPI_DESCRIPTION,
+    version=OPENAPI_VERSION,
+    docs_url="/",
+    openapi_tags=OPENAPI_TAGS,
+)
 
 app.include_router(shopeat.api.accounts.api.router)
 app.include_router(shopeat.api.groups.api.router)
