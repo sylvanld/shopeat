@@ -2,8 +2,8 @@
 
 ## Micro-Services
 
-![Architecture schema](/images/architecture.drawio.png)
+![Architecture schema](../images/architecture.drawio.png)
 
 ## Database schemas
 
-![Architecture schema](/images/database.drawio.png)
+![Architecture schema](../images/database.drawio.png)

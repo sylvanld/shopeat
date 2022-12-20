@@ -59,10 +59,10 @@ Exemples de groupes:
 - Collègues
 - Etc...
 
-# [Draft] FoodBro's database
+# FoodBro's database
 
-![draft database](docs/images/draft-database.drawio.png)
+![database schema](docs/images/database.drawio.png)
 
-# [Draft] FoodBro's architecture
+# FoodBro's architecture
 
-![draft architecture](docs/images/draft-architecture.drawio.png)
+![services architecture](docs/images/architecture.drawio.png)
