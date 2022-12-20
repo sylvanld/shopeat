@@ -21,5 +21,5 @@ OPENAPI_TAGS = [
     {
         "name": "Ingredients",
         "description": "Manage ingredients and ingredients' shelves.",
-    }
+    },
 ]
