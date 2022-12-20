@@ -1,0 +1,79 @@
+name: Verify endpoints security
+testcases:
+  - name: Validate accounts security
+    steps:
+      - type: http
+        method: "GET"
+        url: "{{.API_URL}}/accounts/whoami"
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+  - name: Validate groups security
+    steps:
+      - type: http
+        method: "GET"
+        url: "{{.API_URL}}/groups"
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+      - type: http
+        method: "POST"
+        url: "{{.API_URL}}/groups"
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+      - type: http
+        method: "POST"
+        url: "{{.API_URL}}/groups/54c6e8133acc4264841fc6bb8982a666/leave"
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+      - type: http
+        method: "POST"
+        url: "{{.API_URL}}/groups/54c6e8133acc4264841fc6bb8982a666/admin/members"
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+      - type: http
+        method: "PUT"
+        url: "{{.API_URL}}/groups/54c6e8133acc4264841fc6bb8982a666/admin/members/54c6e8133acc4264841fc6bb8982a666"
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+      - type: http
+        method: "DELETE"
+        url: "{{.API_URL}}/groups/54c6e8133acc4264841fc6bb8982a666/admin/members/54c6e8133acc4264841fc6bb8982a666"
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+  - name: Validate ingredients security
+    steps:
+      - type: http
+        method: "GET"
+        url: "{{.API_URL}}/shelves"
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+      - type: http
+        method: "POST"
+        url: "{{.API_URL}}/shelves"
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+      - type: http
+        method: "GET"
+        url: "{{.API_URL}}/ingredients/search"
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+      - type: http
+        method: "GET"
+        url: "{{.API_URL}}/ingredients"
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+      - type: http
+        method: "POST"
+        url: "{{.API_URL}}/ingredients"
+        assertions:
+          - result.statuscode ShouldEqual 401
