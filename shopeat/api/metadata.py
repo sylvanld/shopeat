@@ -13,5 +13,13 @@ OPENAPI_TAGS = [
     {
         "name": "Accounts",
         "description": "Endpoints to create and manage accounts, and get access tokens.",
+    },
+    {
+        "name": "Groups",
+        "description": "Manage groups of users who shares the same table and may do shopping together.",
+    },
+    {
+        "name": "Ingredients",
+        "description": "Manage ingredients and ingredients' shelves.",
     }
 ]

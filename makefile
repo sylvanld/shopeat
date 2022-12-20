@@ -1,5 +1,5 @@
 SHOPEAT_AMQP_BROKER_URL	?= amqp://toto@localhost
-SHOPEAT_DATABASE_URL	?= sqlite+aiosqlite:///:memory:
+SHOPEAT_DATABASE_URL	?= sqlite+aiosqlite:///db.sqlite
 SHOPEAT_JWT_SECRET		?= example
 
 export
