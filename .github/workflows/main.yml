@@ -5,7 +5,7 @@ on:
       - synchronize
 
 jobs:
-  test:
+  unit_tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,10 +16,36 @@ jobs:
       - name: "Install test dependencies"
         run: pip install -r requirements/dev.txt
       - name: "Run unit tests"
-        run: make test
+        run: make unit-tests
+
+  e2e_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install OVH venom
+        run: |
+          curl https://github.com/ovh/venom/releases/download/v1.0.1/venom.linux-amd64 -L -o /usr/bin/venom
+          chmod +x /usr/bin/venom
+          venom -h
+      - name: "Setup Python"
+        uses: actions/setup-python@v4.3.1
+        with:
+          python-version: 3.11
+      - name: "Install test dependencies"
+        run: pip install -r requirements/dev.txt
+
+      - name: "Run unit tests"
+        run: |
+          # TODO: do this using docker image
+          # start server in development mode
+          make serve &
+          make e2e-tests
 
   lint:
     runs-on: ubuntu-latest
+    needs:
+      - unit_tests
+      - e2e_tests
     steps:
       - uses: actions/checkout@v2
       - name: "Setup Python"

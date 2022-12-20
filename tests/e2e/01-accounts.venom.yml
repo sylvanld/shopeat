@@ -1,0 +1,89 @@
+name: Test accounts API
+testcases:
+  - name: create_account
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/accounts"
+        timeout: 5
+        body: |-
+          {
+            "email": "{{.account.email}}",
+            "username": "{{.account.username}}",
+            "password": "{{.account.password}}"
+          }
+        vars:
+          account_uid:
+            from: result.bodyjson.uid
+        assertions:
+          - result.statuscode ShouldEqual 201
+
+  - name: create_another_account
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/accounts"
+        timeout: 5
+        body: |-
+          {
+            "email": "{{.account2.email}}",
+            "username": "{{.account2.username}}",
+            "password": "{{.account2.password}}"
+          }
+        vars:
+          account_uid:
+            from: result.bodyjson.uid
+        assertions:
+          - result.statuscode ShouldEqual 201
+
+  - name: get_token_with_wrong_credentials
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/auth/token"
+        timeout: 5
+        body: |-
+          {
+            "username": "{{.account.username}}",
+            "password": "wrong-password"
+          }
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+  - name: get_token
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/auth/token"
+        timeout: 5
+        body: |-
+          {
+            "username": "{{.account.username}}",
+            "password": "{{.account.password}}"
+          }
+        vars:
+          access_token:
+            from: result.bodyjson.access_token
+        assertions:
+          - result.statuscode ShouldEqual 200
+
+  - name: get_current_user_without_token
+    steps:
+      - type: http
+        method: GET
+        url: "{{.API_URL}}/accounts/whoami"
+        timeout: 5
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+  - name: get_current_user
+    steps:
+      - type: http
+        method: GET
+        url: "{{.API_URL}}/accounts/whoami"
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        timeout: 5
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.uid ShouldEqual {{.create_account.account_uid}}

@@ -1,0 +1,9 @@
+account:
+  username: jack
+  email: jack@example.com
+  password: password
+
+account2:
+  username: marc
+  email: marc@example.com
+  password: maaaarc!
