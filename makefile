@@ -22,6 +22,9 @@ help: ## Show this help message
 serve: ## Run api in debug mode with hot reload
 	uvicorn shopeat.api.asgi:app --reload
 
+docs: ## Serve documentation with dev. server in hot relaod mode
+	mkdocs serve -a 127.0.0.1:8086
+
 format: ## Format code accorting to project conventions
 	isort --profile black $(SOURCE_PATH) $(UNIT_TESTS_PATH)
 	black $(SOURCE_PATH) $(UNIT_TESTS_PATH)
@@ -29,6 +32,9 @@ format: ## Format code accorting to project conventions
 freeze: ## Show installed dependencies
 	@echo "# Using pip: `which pip`"
 	pip freeze
+
+openapi: ## output openapi specs
+	@python -m shopeat api-specs --no-info
 
 ##@ Target used to test codebase quality and non-regression
 

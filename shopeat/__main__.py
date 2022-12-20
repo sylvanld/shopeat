@@ -8,15 +8,21 @@ def CLI():  # pylint: disable=invalid-name
 
 @CLI.command("api-specs")
 @click.option(
+    "--no-info", is_flag=True, help="Remove 'info' key from generated openapi spec."
+)
+@click.option(
     "--pretty", is_flag=True, help="Properly indent JSON to make it human readable"
 )
-def print_openapi_schema(pretty: bool):
+def print_openapi_schema(no_info: bool, pretty: bool):
     import json
 
     import shopeat.api.asgi
 
     indent = 4 if pretty else None
-    print(json.dumps(shopeat.api.asgi.app.openapi(), indent=indent))
+    openapi_spec = shopeat.api.asgi.app.openapi()
+    if no_info:
+        openapi_spec.pop("info")
+    print(json.dumps(openapi_spec, indent=indent))
 
 
 @CLI.command("api-start")
