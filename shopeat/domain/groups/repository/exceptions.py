@@ -1,0 +1,6 @@
+class RepositoryException(Exception):
+    ...
+
+
+class CantDeleteLastGroupMemberError(RepositoryException):
+    ...

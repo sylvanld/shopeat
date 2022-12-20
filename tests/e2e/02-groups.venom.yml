@@ -1,0 +1,165 @@
+name: Test groups API
+testcases:
+  - name: get_token
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/auth/token"
+        timeout: 5
+        body: |-
+          {
+            "username": "{{.account.username}}",
+            "password": "{{.account.password}}"
+          }
+        vars:
+          access_token:
+            from: result.bodyjson.access_token
+        assertions:
+          - result.statuscode ShouldEqual 200
+
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/auth/token"
+        timeout: 5
+        body: |-
+          {
+            "username": "{{.account2.username}}",
+            "password": "{{.account2.password}}"
+          }
+        vars:
+          access_token2:
+            from: result.bodyjson.access_token
+        assertions:
+          - result.statuscode ShouldEqual 200
+
+  - name: get_account
+    steps:
+      - type: http
+        method: GET
+        url: "{{.API_URL}}/accounts/whoami"
+        headers:
+          Authorization: "Bearer {{.get_token.access_token2}}"
+        timeout: 5
+        vars:
+          account2_uid:
+            from: result.bodyjson.uid
+        assertions:
+          - result.statuscode ShouldEqual 200
+
+  - name: group_create
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/groups"
+        timeout: 5
+        body: |-
+          {
+            "name": "Example group!"
+          }
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        vars:
+          group_uid:
+            from: result.bodyjson.uid
+        assertions:
+          - result.statuscode ShouldEqual 201
+
+  - name: Ensure that the sole owner of a group can't just leave the group empty
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/groups/{{.group_create.group_uid}}/leave"
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        timeout: 5
+        assertions:
+          - result.statuscode ShouldEqual 403
+
+  - name: Ensure that owner of a group can find this group
+    steps:
+      - type: http
+        method: GET
+        url: "{{.API_URL}}/groups"
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        timeout: 5
+        assertions:
+          - result.bodyjson ShouldHaveLength 1
+
+  - name: Ensure that another user can't see this group
+    steps:
+      - type: http
+        method: GET
+        url: "{{.API_URL}}/groups"
+        headers:
+          Authorization: "Bearer {{.get_token.access_token2}}"
+        timeout: 5
+        assertions:
+          - result.bodyjson ShouldHaveLength 0
+
+  - name: Ensure owner of a group can add member to this group
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/groups/{{.group_create.group_uid}}/admin/members"
+        body: |-
+          {
+            "account_uid": "{{.get_account.account2_uid}}",
+            "nickname": "anonymous",
+            "role": "somerole"
+          }
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        timeout: 5
+        assertions:
+          - result.bodyjson ShouldHaveLength 0
+
+  - name: Verify that new member can now see this group!
+    steps:
+      - type: http
+        method: GET
+        url: "{{.API_URL}}/groups"
+        headers:
+          Authorization: "Bearer {{.get_token.access_token2}}"
+        timeout: 5
+        assertions:
+          - result.bodyjson ShouldHaveLength 1
+
+  - name: Ensure that owner still can't leave the group as other member is not owner
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/groups/{{.group_create.group_uid}}/leave"
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        timeout: 5
+        assertions:
+          - result.statuscode ShouldEqual 403
+
+  - name: Promote another user as owner
+    steps:
+      - type: http
+        method: PUT
+        url: "{{.API_URL}}/groups/{{.group_create.group_uid}}/admin/members/{{.get_account.account2_uid}}"
+        body: |-
+          {
+            "nickname": "The boss!",
+            "role": "owner"
+          }
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        timeout: 5
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.role ShouldEqual owner
+
+  - name: Ensure that owner can leave the group now that ownership has been delegated
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/groups/{{.group_create.group_uid}}/leave"
+        headers:
+          Authorization: "Bearer {{.get_token.access_token}}"
+        timeout: 5
+        assertions:
+          - result.statuscode ShouldEqual 200

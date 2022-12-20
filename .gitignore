@@ -1,4 +1,16 @@
+# local environment custom
+.env
+
+# python cache assets
 .pytest_cache
 .venv
-.env
 __pycache__
+
+# dev. database
+*.sqlite
+
+# e2e tests output (venom)
+*.dump.json
+*.prof
+venom.log
+test_results.*

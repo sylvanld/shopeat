@@ -2,7 +2,7 @@ import click
 
 
 @click.group()
-def CLI():
+def CLI():  # pylint: disable=invalid-name
     ...
 
 
