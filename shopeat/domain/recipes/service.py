@@ -1,7 +1,10 @@
 from typing import Sequence
 
+from fastapi import HTTPException
+
 from shopeat.domain.recipes.dtos import RecipeDetailsDTO, RecipeReadDTO, RecipeWriteDTO
 from shopeat.domain.recipes.repository.interface import RecipeRepository
+from shopeat.domain.recipes.repository.sql import RecipeNotFoundError
 
 
 class RecipeService:
@@ -12,7 +15,10 @@ class RecipeService:
         return await self.recipe_repository.search(query)
 
     async def get_recipe_details(self, recipe_uid: str) -> RecipeDetailsDTO:
-        return await self.recipe_repository.get_detail(recipe_uid)
+        try:
+            return await self.recipe_repository.get_detail(recipe_uid)
+        except RecipeNotFoundError:
+            raise HTTPException(404, detail=f"No recipe with UID {recipe_uid}")
 
     async def create_recipe(self, recipe_create_dto: RecipeWriteDTO) -> RecipeReadDTO:
         return await self.recipe_repository.create(recipe_create_dto)
@@ -20,7 +26,13 @@ class RecipeService:
     async def update_recipe(
         self, recipe_uid: str, recipe_update_dto: RecipeWriteDTO
     ) -> RecipeReadDTO:
-        return await self.recipe_repository.update(recipe_uid, recipe_update_dto)
+        try:
+            return await self.recipe_repository.update(recipe_uid, recipe_update_dto)
+        except RecipeNotFoundError:
+            raise HTTPException(404, detail=f"No recipe with UID {recipe_uid}")
 
     async def delete_recipe(self, recipe_uid: str) -> RecipeReadDTO:
-        return await self.recipe_repository.delete(recipe_uid)
+        try:
+            return await self.recipe_repository.delete(recipe_uid)
+        except RecipeNotFoundError:
+            raise HTTPException(404, detail=f"No recipe with UID {recipe_uid}")
