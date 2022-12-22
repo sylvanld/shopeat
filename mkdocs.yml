@@ -1,4 +1,6 @@
 site_name: ShopEat
+repo_url: https://github.com/sylvanld/shopeat
+repo_name: sylvanld/shopeat
 theme:
   name: material
   palette:
@@ -18,3 +20,5 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+extra_css:
+  - assets/main.css

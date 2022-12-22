@@ -38,7 +38,7 @@ jobs:
         run: |
           # TODO: do this using docker image
           # start server in development mode
-          make serve &
+          make serve-api &
           # TODO: determine clean way to wait until API started instead of waiting random time...
           sleep 3
           make e2e-tests
