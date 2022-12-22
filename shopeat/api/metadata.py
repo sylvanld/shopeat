@@ -22,4 +22,8 @@ OPENAPI_TAGS = [
         "name": "Ingredients",
         "description": "Manage ingredients and ingredients' shelves.",
     },
+    {
+        "name": "Recipes",
+        "description": "Create, share and manage recipes. Add or remove ingredients and steps to recipes.",
+    },
 ]
