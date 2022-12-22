@@ -1,4 +1,6 @@
 site_name: ShopEat
+repo_url: https://github.com/sylvanld/shopeat
+repo_name: sylvanld/shopeat
 theme:
   name: material
   palette:
