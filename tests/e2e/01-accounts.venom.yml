@@ -67,6 +67,21 @@ testcases:
         assertions:
           - result.statuscode ShouldEqual 200
 
+  - name: Get token by posting form data
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/auth/token"
+        timeout: 5
+        body: "username={{.account.username}}&password={{.account.password}}"
+        headers:
+          Content-Type: application/x-www-form-urlencoded
+        vars:
+          access_token:
+            from: result.bodyjson.access_token
+        assertions:
+          - result.statuscode ShouldEqual 200
+
   - name: get_current_user_without_token
     steps:
       - type: http
