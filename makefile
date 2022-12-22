@@ -11,6 +11,8 @@ PATH := $(VENV)/bin:$(PATH)
 SOURCE_PATH=shopeat/
 UNIT_TESTS_PATH=tests/
 
+.PHONY: docs
+
 help: ## Show this help message
 	@echo "Usage: make [target]"
 	@echo ""
@@ -19,10 +21,19 @@ help: ## Show this help message
 
 ##@ Target to work with python code locally
 
-serve: ## Run api in debug mode with hot reload
+$(VENV):
+	virtualenv -p python3 $(VENV)
+
+install: $(VENV) ## Install development and documentation dependencies
+	pip install -r requirements/dev.txt -r requirements/docs.txt
+
+serve-api: ## Run api in debug mode with hot reload
 	uvicorn shopeat.api.asgi:app --reload
 
-docs: ## Serve documentation with dev. server in hot relaod mode
+serve-notifier: ## Run websocket notifier service
+	python -m shopeat notifier-start
+
+serve-docs: ## Serve documentation with dev. server in hot relaod mode
 	mkdocs serve -a 127.0.0.1:8086
 
 format: ## Format code accorting to project conventions
