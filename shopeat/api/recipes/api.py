@@ -17,7 +17,7 @@ async def search_recipes(query: str, token_account_uid: str = Depends(authentica
     return await recipe_service.search_recipes(query)
 
 
-@router.post("/recipes", response_model=RecipeReadDTO)
+@router.post("/recipes", response_model=RecipeReadDTO, status_code=201)
 async def create_recipe(
     recipe_create_dto: RecipeWriteDTO, token_account_uid: str = Depends(authenticate)
 ):

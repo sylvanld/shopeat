@@ -49,7 +49,7 @@ testcases:
           shelve_uid:
             from: result.bodyjson.uid
         assertions:
-          - result.statuscode ShouldEqual 200
+          - result.statuscode ShouldEqual 201
 
   - name: create_ingredients
     steps:
@@ -68,7 +68,7 @@ testcases:
           ingredient1_uid:
             from: result.bodyjson.uid
         assertions:
-          - result.statuscode ShouldEqual 200
+          - result.statuscode ShouldEqual 201
 
       - type: http
         method: POST
@@ -85,7 +85,7 @@ testcases:
           ingredient2_uid:
             from: result.bodyjson.uid
         assertions:
-          - result.statuscode ShouldEqual 200
+          - result.statuscode ShouldEqual 201
 
   - name: Get multiple ingredients by UID
     steps:

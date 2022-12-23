@@ -28,7 +28,7 @@ async def list_ingredient_shelves(token_account_uid: str = Depends(authenticate)
     return await ingredient_service.list_ingredient_shelves()
 
 
-@router.post("/shelves", response_model=ShelveReadDTO)
+@router.post("/shelves", response_model=ShelveReadDTO,status_code=201)
 async def add_ingredient_shelve(
     shelve_create_dto: ShelveCreateDTO, token_account_uid: str = Depends(authenticate)
 ):
@@ -51,7 +51,7 @@ async def get_several_ingredients_by_uids(
     return await ingredient_service.get_ingredients_by_uids(ingredient_uids)
 
 
-@router.post("/ingredients", response_model=IngredientReadDTO)
+@router.post("/ingredients", response_model=IngredientReadDTO, status_code=201)
 async def add_ingredient(
     ingredient_create_dto: IngredientCreateDTO,
     token_account_uid: str = Depends(authenticate),
