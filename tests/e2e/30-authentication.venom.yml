@@ -77,3 +77,35 @@ testcases:
         url: "{{.API_URL}}/ingredients"
         assertions:
           - result.statuscode ShouldEqual 401
+
+  - name: Validate recipes security
+    steps:
+      - type: http
+        method: "GET"
+        url: "{{.API_URL}}/recipes/search"
+        assertions:
+          - result.statuscode ShouldEqual 401
+      
+      - type: http
+        method: "GET"
+        url: "{{.API_URL}}/recipes/54c6e8133acc4264841fc6bb8982a666"
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+      - type: http
+        method: "POST"
+        url: "{{.API_URL}}/recipes"
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+      - type: http
+        method: "PUT"
+        url: "{{.API_URL}}/recipes/54c6e8133acc4264841fc6bb8982a666"
+        assertions:
+          - result.statuscode ShouldEqual 401
+
+      - type: http
+        method: "DELETE"
+        url: "{{.API_URL}}/recipes/54c6e8133acc4264841fc6bb8982a666"
+        assertions:
+          - result.statuscode ShouldEqual 401

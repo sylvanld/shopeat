@@ -1,0 +1,100 @@
+name: Test recipes API
+testcases:
+  - name: get_token
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/auth/token"
+        body: |-
+          {
+            "username": "{{.account.username}}",
+            "password": "{{.account.password}}"
+          }
+        vars:
+          access_token:
+            from: result.bodyjson.access_token
+        assertions:
+          - result.statuscode ShouldEqual 200
+
+  - name: create_recipe
+    steps:
+      - type: http
+        method: POST
+        url: "{{.API_URL}}/recipes"
+        body: |-
+          {
+            "name": "Frid chicken"
+          }
+        headers:
+          Authorization: Bearer {{.get_token.access_token}}
+        vars:
+          recipe_uid:
+            from: result.bodyjson.uid
+        assertions:
+          - result.statuscode ShouldEqual 201
+          - result.bodyjson.uid ShouldNotBeNil
+
+  - name: get recipe details
+    steps:
+      - type: http
+        method: GET
+        url: "{{.API_URL}}/recipes/{{.create_recipe.recipe_uid}}"
+        headers:
+          Authorization: Bearer {{.get_token.access_token}}
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.name ShouldEqual 'Frid chicken'
+          - result.bodyjson.thumbnail_url ShouldEqual ''
+          - result.bodyjson.ingredients ShouldHaveLength 0
+          - result.bodyjson.steps ShouldHaveLength 0
+
+  - name: update recipe
+    steps:
+      - type: http
+        method: PUT
+        url: "{{.API_URL}}/recipes/{{.create_recipe.recipe_uid}}"
+        body: |-
+          {
+            "name": "Fried chicken",
+            "thumbnail_url": "http://cdn.example.com/fried-chicken.png"
+          }
+        headers:
+          Authorization: Bearer {{.get_token.access_token}}
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.name ShouldEqual 'Fried chicken'
+          - result.bodyjson.thumbnail_url ShouldEqual 'http://cdn.example.com/fried-chicken.png'
+
+  - name: ensure recipe details are updated
+    steps:
+      - type: http
+        method: GET
+        url: "{{.API_URL}}/recipes/{{.create_recipe.recipe_uid}}"
+        headers:
+          Authorization: Bearer {{.get_token.access_token}}
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.name ShouldEqual 'Fried chicken'
+          - result.bodyjson.thumbnail_url ShouldEqual 'http://cdn.example.com/fried-chicken.png'
+          - result.bodyjson.ingredients ShouldHaveLength 0
+          - result.bodyjson.steps ShouldHaveLength 0
+
+  - name: delete recipe
+    steps:
+      - type: http
+        method: DELETE
+        url: "{{.API_URL}}/recipes/{{.create_recipe.recipe_uid}}"
+        headers:
+          Authorization: Bearer {{.get_token.access_token}}
+        assertions:
+          - result.statuscode ShouldEqual 200
+
+  - name: ensure deleted recipe does not exists anymore
+    steps:
+      - type: http
+        method: GET
+        url: "{{.API_URL}}/recipes/{{.create_recipe.recipe_uid}}"
+        headers:
+          Authorization: Bearer {{.get_token.access_token}}
+        assertions:
+          - result.statuscode ShouldEqual 404
