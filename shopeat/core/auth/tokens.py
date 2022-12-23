@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 
 import jwt
-from shopeat.core.auth.exceptions import InvalidAccessToken
 
+from shopeat.core.auth.exceptions import InvalidAccessToken
 from shopeat.core.config import Config
 from shopeat.settings import SHOPEAT_JWT_SECRET
 

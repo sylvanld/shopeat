@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-from shopeat.core.auth.exceptions import InvalidAccessToken
 
+from shopeat.core.auth.exceptions import InvalidAccessToken
 from shopeat.core.auth.tokens import account_uid_from_token
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")

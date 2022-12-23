@@ -1,6 +1,6 @@
-
 class AuthenticationError(Exception):
     ...
+
 
 class InvalidAccessToken(AuthenticationError):
     ...

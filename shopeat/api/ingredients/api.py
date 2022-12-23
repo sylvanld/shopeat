@@ -28,7 +28,7 @@ async def list_ingredient_shelves(token_account_uid: str = Depends(authenticate)
     return await ingredient_service.list_ingredient_shelves()
 
 
-@router.post("/shelves", response_model=ShelveReadDTO,status_code=201)
+@router.post("/shelves", response_model=ShelveReadDTO, status_code=201)
 async def add_ingredient_shelve(
     shelve_create_dto: ShelveCreateDTO, token_account_uid: str = Depends(authenticate)
 ):
