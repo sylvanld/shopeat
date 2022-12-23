@@ -1,5 +1,6 @@
-from fastapi import Depends, Header, HTTPException
+from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
+from shopeat.core.auth.exceptions import InvalidAccessToken
 
 from shopeat.core.auth.tokens import account_uid_from_token
 
@@ -11,4 +12,7 @@ def get_access_token():
 
 
 async def authenticate(token: str = Depends(get_access_token())):
-    return account_uid_from_token(token)
+    try:
+        return account_uid_from_token(token)
+    except InvalidAccessToken as error:
+        raise HTTPException(401, "Invalid access token") from error
