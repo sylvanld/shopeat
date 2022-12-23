@@ -54,12 +54,12 @@ unit-tests: ## Run unit tests
 
 VENOM_VAR_API_URL=http://localhost:8000
 
-e2e-tests: ## Run end to end tests
-	TEST_SETS=`find tests/e2e/*.venom.yml`		\
-		&& venom run -vvv --format xml			\
-			--var-from-file tests/e2e/vars.yml	\
-			--output-dir tests/e2e/results		\
-			$$TEST_SETS \
+e2e-tests: ## Run end to end tests (optionally: test=<test-name>)
+	TEST_SETS=`find tests/e2e/*$(test)*.venom.yml`		\
+		&& venom run -vvv --format xml					\
+			--var-from-file tests/e2e/vars.yml			\
+			--output-dir tests/e2e/results				\
+			$$TEST_SETS
 			
 
 lint: ## Check for errors in code and abort if one is found
